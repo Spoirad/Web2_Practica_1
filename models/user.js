@@ -9,10 +9,12 @@ const userScheme = new mongoose.Schema({
         type: String, 
         required: true
     },
-    role:{
-        type: ["user", "admin"], 
+    role: {
+        type: String,
+        enum: ["user", "admin"],
         default: "user"
-    },
+    }
+    ,
     codigo: {
         type: Number,
         default: 0  
@@ -34,4 +36,4 @@ const userScheme = new mongoose.Schema({
     }
 )
 
-module.exports = mongoose.model("users", userScheme) 
+module.exports = mongoose.model("user", userScheme) 

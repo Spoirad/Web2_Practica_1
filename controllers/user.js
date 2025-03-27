@@ -1,38 +1,44 @@
-const User = require("../models/users");
+const { matchedData } = require("express-validator");
+const User = require("../models/user.js");
 const { encrypt } = require("../utils/handlePassword");
 const { tokenSign } = require("../utils/handleJWT");
 const { handleHttpError } = require("../utils/handleHttpError");
+const { MAX_VERIFICATION_ATTEMPTS } = require("../config/config.js");
+
+
+//Funcion simple para la creación del código de verificación de 6 digitos.
+const generateVerificationCode = () => {
+    return Math.floor(100000 + Math.random() * 900000); // Genera un número entre 100000 y 999999
+};
 
 const registerUser = async (req, res) => {
     try {
-        //extraer de la req los datos del usuario
-        const { email, password, role } = req.body;
-
-        // Verificar si el usuario ya existe , no puede haber 2 emails iguales.
-        const existingUser = await User.findOne({ email });
+        const body = matchedData(req); // Filtra los datos validados del request
+        // Verificar si el usuario ya existe
+        const existingUser = await User.findOne({ email: body.email });
         if (existingUser) {
-            //devolver el 409 si ya esta 
-            return handleHttpError(res, "El email ya está registrado", 409);
+            return handleHttpError(res, "El email ya está registrado", 409); //Error 409 requerido
         }
         // Encriptar la contraseña antes de guardarla
-        const hashedPassword = await encrypt(password);
-        // Crear el usuario en la base de datos
-        const newUser = new User({
-            email,
-            password: hashedPassword,
-            role
-        });
-        await newUser.save();
-        // Generar token JWT para el nuevo usuario
-        const token = tokenSign(newUser);
-        res.status(201).json({
-            message: "Usuario registrado con éxito",
-            user: { id: newUser._id, email: newUser.email, role: newUser.role },
+        body.password = await encrypt(body.password);
+        //le damos el codigo y los intentos.
+        body.codigo = generateVerificationCode();
+        body.attemps = MAX_VERIFICATION_ATTEMPTS; //variable en config.js , creí correcto que estuviese definida de manera global , en caso de cambiarla no se debe buscar en el codigo.
+        // Crear usuario en la base de datos
+        const data = await User.create(body);
+        // Generar token JWT
+        const token = tokenSign(data);
+
+        //devolver el OK + datos y token
+        res.status(201).json({             
+            email: data.email,
+            status: data.status, // Representa si el email ha sido verificado
+            role: data.role,
             token
-        });
-    } catch (error) {
-        console.error("Error en registerUser:", error);
-        handleHttpError(res, "Error en el servidor", 500);
+         });
+    } catch (err) {
+        console.error(err);
+        handleHttpError(res, "ERROR_REGISTER_USER");
     }
 };
 
