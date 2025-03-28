@@ -1,4 +1,4 @@
 module.exports = {
     MAX_VERIFICATION_ATTEMPTS: 3,
-    // Otras configuraciones...
+   //Se puedfen ir añadioendo mas cosas
 };

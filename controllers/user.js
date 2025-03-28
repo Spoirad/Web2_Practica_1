@@ -42,4 +42,37 @@ const registerUser = async (req, res) => {
     }
 };
 
-module.exports = { registerUser };
+const validateEmail = async (req, res) => {
+    try {
+        const user = req.user; // Usuario autenticado extraído del token (authMiddleware)
+        const { codigo } = matchedData(req);
+
+        // Verificar si el usuario ya está validado
+        if (user.status) {
+            return handleHttpError(res, "El email ya ha sido validado", 400);
+        }
+        // Comprobar intentos restantes
+        if (user.attempts <= 0) {
+            return handleHttpError(res, "Número máximo de intentos alcanzado", 403);
+        }
+        // Comparar el código ingresado con el código en la base de datos
+        if (user.codigo !== codigo) {
+            user.attemps -= 1;
+            user.markModified("attempts");
+            await user.save();
+            return handleHttpError(res, "Código incorrecto", 401);
+        }
+
+        // Si el código es correcto, actualizar el estado del usuario
+        user.status = true;
+        user.attemps = 3; // Resetear intentos por si hayq ue volver a verificar en algun momento.
+        await user.save();
+
+        return res.json({ message: "Email validado correctamente" });
+    } catch (error) {
+        console.log(error);
+        handleHttpError(res, "Error validando el email");
+    }
+};
+
+module.exports = { registerUser, validateEmail };

@@ -8,5 +8,9 @@ const validatorCreateItem = [
     validateResult
 ]
 
+const validatorVerificate = [
+    check("codigo").exists().isNumeric().isLength({ min: 6, max: 6 }).withMessage("El código debe ser un numero de 6 cifras."),
+    validateResult
+]
 
-module.exports = { validatorCreateItem };
+module.exports = { validatorCreateItem, validatorVerificate };
