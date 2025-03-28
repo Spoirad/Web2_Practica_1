@@ -4,7 +4,7 @@ Content-Type: application/json
 api_key: prueba_api_random
 
 {
-"email": "test102@test.com",
+"email": "test105@test.com",
 "password": "password1"
 }
 ###
@@ -14,7 +14,16 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2U1YjFiYmYyOThmZTE2MzEyZWQwYzYiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0MzEwNjQ5MSwiZXhwIjoxNzQzMTEzNjkxfQ.mOszc4zOvG4ea9idsLvJqDFMJamUhITjtaDdfjkccDs
 
 {
-  "codigo": 618845
+  "codigo": 618821
+}
+
+###
+POST http://localhost:3000/user/login
+Content-Type: application/json
+
+{
+  "email": "test105@test.com",
+  "password": "password1"
 }
 
 ###

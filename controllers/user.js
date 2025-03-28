@@ -1,6 +1,6 @@
 const { matchedData } = require("express-validator");
 const User = require("../models/user.js");
-const { encrypt } = require("../utils/handlePassword");
+const { encrypt, compare } = require("../utils/handlePassword");
 const { tokenSign } = require("../utils/handleJWT");
 const { handleHttpError } = require("../utils/handleHttpError");
 const { MAX_VERIFICATION_ATTEMPTS } = require("../config/config.js");
@@ -75,4 +75,40 @@ const validateEmail = async (req, res) => {
     }
 };
 
-module.exports = { registerUser, validateEmail };
+const loginUser = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        // Buscar usuario por email
+        const user = await User.findOne({ email });
+        if (!user) {
+            return handleHttpError(res, "Usuario no encontrado", 404);
+        }
+
+        // Comparar contraseña con bcrypt
+        const isMatch = await compare(password, user.password);
+        if (!isMatch) {
+            return handleHttpError(res, "Credenciales incorrectas", 401);
+        }
+
+        // Generar token JWT
+        const token = tokenSign(user);
+
+        return res.json({
+            message: "Login exitoso",
+            user: {
+                _id: user._id,
+                email: user.email,
+                role: user.role
+            },
+            token
+        });
+
+    } catch (error) {
+        console.log(error);
+        return handleHttpError(res, "Error en el login", 500);
+    }
+};
+
+
+module.exports = { registerUser, validateEmail, loginUser };

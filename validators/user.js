@@ -13,4 +13,10 @@ const validatorVerificate = [
     validateResult
 ]
 
-module.exports = { validatorCreateItem, validatorVerificate };
+const validatorLogin = [
+    check("email").isEmail().withMessage("Formato de email inválido"),
+    check("password").isLength({ min: 6 }).withMessage("La contraseña debe tener al menos 6 caracteres"),
+    validateResult
+];
+
+module.exports = { validatorCreateItem, validatorVerificate, validatorLogin  };
