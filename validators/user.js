@@ -19,4 +19,22 @@ const validatorLogin = [
     validateResult
 ];
 
-module.exports = { validatorCreateItem, validatorVerificate, validatorLogin  };
+const validatorPersonalData = [
+    check("name").notEmpty().withMessage("El nombre es obligatorio"),
+    check("surnames").notEmpty().withMessage("Los apellidos son obligatorios"),
+    check("nif").notEmpty().withMessage("El NIF es obligatorio"),
+    validateResult
+];
+
+const validatorCompany = [
+    check("company.name").notEmpty().withMessage("El nombre de la empresa es obligatorio"),
+    check("company.cif").notEmpty().isLength({ min: 9, max: 9 }).withMessage("El CIF debe tener 9 caracteres"),
+    check("company.street").notEmpty().withMessage("La calle es obligatoria"),
+    check("company.number").isNumeric().withMessage("El número debe ser un valor numérico"),
+    check("company.postal").isNumeric().withMessage("El código postal debe ser numérico"),
+    check("company.city").notEmpty().withMessage("La ciudad es obligatoria"),
+    check("company.province").notEmpty().withMessage("La provincia es obligatoria"),
+    validateResult
+]
+
+module.exports = { validatorCreateItem, validatorVerificate, validatorLogin, validatorPersonalData, validatorCompany };

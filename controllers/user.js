@@ -110,5 +110,55 @@ const loginUser = async (req, res) => {
     }
 };
 
+const updateUserPersonalData = async (req, res) => {
+    try {
+        const user = req.user; // Usuario autenticado por el authMiddleware
+        const { name, surnames, nif } = matchedData(req);
 
-module.exports = { registerUser, validateEmail, loginUser };
+        // Actualizar usuario en la base de datos
+        const updatedUser = await User.findByIdAndUpdate(
+            user._id,
+            { name, surnames, nif },
+            { new: true }
+        );
+
+        if (!updatedUser) {
+            return handleHttpError(res, "No se pudo actualizar el usuario", 400);
+        }
+
+        return res.json(updatedUser);
+    } catch (error) {
+        console.error(error);
+        handleHttpError(res, "Error actualizando datos personales", 500);
+    }
+};
+
+const updateCompany = async (req, res) => {
+    try {
+        const user = req.user; // Usuario autenticado desde authMiddleware
+        const { company } = req.body;
+
+        // Validar si ya tiene una empresa asignada con ese CIF
+        const existingCompany = await User.findOne({ "company.cif": company.cif });
+        if (existingCompany) {
+            return handleHttpError(res, "El CIF de la empresa ya existe", 409);
+        }
+
+        // Si el usuario es autónomo, la empresa será su información personal
+        if (user.role === "autonomo") {
+            company.name = user.name;
+            company.cif = user.nif;
+        }
+
+        // Actualizar la empresa del usuario
+        user.company = company;
+        await user.save();
+
+        return res.json({ message: "Empresa actualizada correctamente", company: user.company });
+    } catch (error) {
+        console.log(error);
+        return handleHttpError(res, "Error actualizando la empresa", 500);
+    }
+};
+
+module.exports = { registerUser, validateEmail, loginUser, updateUserPersonalData, updateCompany };

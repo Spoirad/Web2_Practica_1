@@ -27,3 +27,33 @@ Content-Type: application/json
 }
 
 ###
+
+### Actualizar datos personales del usuario
+PUT http://localhost:3000/user/register
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2U1YzBmODQ1NWNhZmNjNWUzZWFkY2IiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0MzI2NjU3NCwiZXhwIjoxNzQzMjczNzc0fQ.724l3uQ3FjlDMAzLIOAVIl4S4aHrIAJNfla4Sml47Jo
+
+{
+  "name": "José",
+  "surnames": "García Pérez",
+  "nif": "40000000W"
+}
+
+###
+
+PATCH http://localhost:3000/user/company
+Content-Type: application/json
+Authorization: Bearer TU_TOKEN_AQUI
+
+{
+  "company": {
+    "name": "Servitop, SL.",
+    "cif": "BXXXXXXXX",
+    "street": "Carlos V",
+    "number": 22,
+    "postal": 28936,
+    "city": "Móstoles",
+    "province": "Madrid"
+  }
+}
+
