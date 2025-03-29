@@ -4,6 +4,7 @@ const { encrypt, compare } = require("../utils/handlePassword");
 const { tokenSign } = require("../utils/handleJWT");
 const { handleHttpError } = require("../utils/handleHttpError");
 const { MAX_VERIFICATION_ATTEMPTS } = require("../config/config.js");
+const { uploadToPinata } = require("../utils/handleUploadIPFS.js");
 
 
 //Funcion simple para la creación del código de verificación de 6 digitos.
@@ -161,4 +162,35 @@ const updateCompany = async (req, res) => {
     }
 };
 
-module.exports = { registerUser, validateEmail, loginUser, updateUserPersonalData, updateCompany };
+const uploadImage = async (req, res) => {
+    try {
+        const user = req.user; // Usuario autenticado del token
+
+        if (!req.file) {
+            return res.status(400).json({ error: "No se subió ninguna imagen" });
+        }
+
+        const fileBuffer = req.file.buffer;
+        const fileName = req.file.originalname;
+
+        // Subir imagen a Pinata
+        const pinataResponse = await uploadToPinata(fileBuffer, fileName);
+        if (!pinataResponse || !pinataResponse.IpfsHash) {
+            return res.status(500).json({ error: "Error al subir el logo a IPFS" });
+        }
+
+        // Construir URL de IPFS
+        const ipfsUrl = `https://ipfs.io/ipfs/${pinataResponse.IpfsHash}`;
+
+        // Guardar la URL en la company del usuario.
+        user.company.logo = ipfsUrl;
+        await user.save();
+
+        res.json({ message: "Logo actualizado correctamente", logo: ipfsUrl });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "ERROR_UPLOAD_COMPANY_IMAGE" });
+    }
+};
+
+module.exports = { registerUser, validateEmail, loginUser, updateUserPersonalData, updateCompany, uploadImage  };

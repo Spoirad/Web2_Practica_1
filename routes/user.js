@@ -1,8 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const { registerUser, validateEmail, loginUser, updateUserPersonalData, updateCompany } = require("../controllers/user.js");
+const { registerUser, validateEmail, loginUser, updateUserPersonalData, updateCompany, uploadImage } = require("../controllers/user.js");
 const { validatorCreateItem, validatorVerificate, validatorLogin, validatorPersonalData, validatorCompany } = require("../validators/user.js");
 const { authMiddleware } = require("../middleware/authMiddleware.js");
+const multer = require("multer");
+const upload = multer();
 
 //POST
 router.post("/register", validatorCreateItem, registerUser);
@@ -14,5 +16,6 @@ router.put("/register", authMiddleware, validatorPersonalData, updateUserPersona
 
 //PATCH
 router.patch("/company", authMiddleware, validatorCompany, updateCompany);
+router.patch("/logo", authMiddleware, upload.single("logo"), uploadImage);
 
 module.exports = router;

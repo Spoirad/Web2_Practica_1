@@ -51,7 +51,8 @@ const userScheme = new mongoose.Schema({
         number: { type: Number, required: false },
         postal: { type: Number, required: false },
         city: { type: String, required: false },
-        province: { type: String, required: false }
+        province: { type: String, required: false },
+        logo: { type: String, required: false }// NUEVO CAMPO PARA EL PASO 5
     }
 },
 

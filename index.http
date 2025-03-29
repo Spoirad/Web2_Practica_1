@@ -43,7 +43,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2U1YzBmO
 
 PATCH http://localhost:3000/user/company
 Content-Type: application/json
-Authorization: Bearer TU_TOKEN_AQUI
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2U1YzBmODQ1NWNhZmNjNWUzZWFkY2IiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0MzI2NjU3NCwiZXhwIjoxNzQzMjczNzc0fQ.724l3uQ3FjlDMAzLIOAVIl4S4aHrIAJNfla4Sml47Jo
 
 {
   "company": {
@@ -57,3 +57,14 @@ Authorization: Bearer TU_TOKEN_AQUI
   }
 }
 
+###
+PATCH http://localhost:3000/user/logo
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2U1YzBmODQ1NWNhZmNjNWUzZWFkY2IiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0MzI4MzcxMiwiZXhwIjoxNzQzMjkwOTEyfQ.RU3IXwq61c13qkEgUgkNHfC0RKDHnD8fAujOt4rHW2U
+Content-Type: multipart/form-data; boundary=----ejemplo
+
+------ejemplo
+Content-Disposition: form-data; name="logo"; filename="logo1.png"
+Content-Type: image/png
+
+< C:\Users\Usuario\Downloads\logo1.png
+------ejemplo--
