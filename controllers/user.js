@@ -193,4 +193,13 @@ const uploadImage = async (req, res) => {
     }
 };
 
-module.exports = { registerUser, validateEmail, loginUser, updateUserPersonalData, updateCompany, uploadImage  };
+const getUser = async (req, res) => {
+    try {
+        res.json(req.user);
+    } catch (error) {
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+
+
+module.exports = { registerUser, validateEmail, loginUser, updateUserPersonalData, updateCompany, uploadImage, getUser };

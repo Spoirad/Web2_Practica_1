@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { registerUser, validateEmail, loginUser, updateUserPersonalData, updateCompany, uploadImage } = require("../controllers/user.js");
+const { registerUser, validateEmail, loginUser, updateUserPersonalData, updateCompany, uploadImage, getUser } = require("../controllers/user.js");
 const { validatorCreateItem, validatorVerificate, validatorLogin, validatorPersonalData, validatorCompany } = require("../validators/user.js");
 const { authMiddleware } = require("../middleware/authMiddleware.js");
 const multer = require("multer");
@@ -17,5 +17,9 @@ router.put("/register", authMiddleware, validatorPersonalData, updateUserPersona
 //PATCH
 router.patch("/company", authMiddleware, validatorCompany, updateCompany);
 router.patch("/logo", authMiddleware, upload.single("logo"), uploadImage);
+
+//GET
+router.get("/", authMiddleware, getUser);
+
 
 module.exports = router;
