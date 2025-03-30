@@ -43,6 +43,10 @@ const userScheme = new mongoose.Schema({
         required: false,
         unique: true // No debería haber dos usuarios con el mismo NIF
     },
+    deleted: {  //AÑADIDO PARA EL PASO 6 -SOFT/HARD DELETE
+        type: Boolean, 
+        default: false 
+    },
     //Información de la empresa
     company: {
         name: { type: String, required: false },

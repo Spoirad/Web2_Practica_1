@@ -201,5 +201,25 @@ const getUser = async (req, res) => {
     }
 };
 
+const deleteUser = async (req, res) => {
+    try {
+        const userId = req.user._id;  // Obtenemos el ID del usuario autenticado
+        const softDelete = req.query.soft !== "false"; // Si ?soft=false, hará hard delete
 
-module.exports = { registerUser, validateEmail, loginUser, updateUserPersonalData, updateCompany, uploadImage, getUser };
+        if (softDelete) {
+            // Soft delete -> solo marcamos el usuario como eliminado
+            await User.findByIdAndUpdate(userId, { deleted: true });
+            return res.json({ message: "User soft deleted successfully" });
+        } else {
+            // Hard delete -> eliminamos de la base de datos
+            await User.findByIdAndDelete(userId);
+            return res.json({ message: "User hard deleted successfully" });
+        }
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+
+module.exports = { registerUser, validateEmail, loginUser, updateUserPersonalData, updateCompany, uploadImage, getUser, deleteUser };
