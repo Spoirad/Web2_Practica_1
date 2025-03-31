@@ -76,5 +76,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2U5OGUwN
 DELETE http://localhost:3000/user?soft=true
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2U5OGUwNjQwMTQzYzBkZGI2ZGYyZjkiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0MzM1OTU1MCwiZXhwIjoxNzQzMzY2NzUwfQ.nz1A9kBV-Ts9cbqGktpSEn5Rokq8fa1wwn7VuESfA3A
 ###
+DELETE http://localhost:3000/user?soft=false
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2U5OGUwNjQwMTQzYzBkZGI2ZGYyZjkiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0MzM1OTU1MCwiZXhwIjoxNzQzMzY2NzUwfQ.nz1A9kBV-Ts9cbqGktpSEn5Rokq8fa1wwn7VuESfA3A
+###
+
 
 
